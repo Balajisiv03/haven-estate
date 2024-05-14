@@ -6,6 +6,7 @@ import About from "./pages/About";
 import Profile from "./pages/Profile";
 import Header from "./components/Header";
 import Createlisting from "./pages/Createlisting";
+import Search from "./pages/Search";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/create-listing" element={<Createlisting />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
     </BrowserRouter>
   );
