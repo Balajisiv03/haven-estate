@@ -1,10 +1,15 @@
 import { Link } from "react-router-dom";
 
 const SignUp = () => {
+  // const handleChange=(e)=>{
+  //   const [formData,setformData]=useState([]);
+  // }
+
   return (
     <div className="p-4 max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold my-7">SignUp</h1>
       <form className="flex flex-col gap-4">
+        {/* onChange={handleChange} */}
         <input
           type="text"
           placeholder="username"
