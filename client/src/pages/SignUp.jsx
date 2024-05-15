@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [signup, setSignup] = useState(true);
@@ -33,12 +34,12 @@ const SignUp = () => {
         })
           .then((response) => {
             if (!response.data.error) {
-              alert("Sign up success");
               console.log("Insert successful:", response.data);
               gotohome();
+              toast.success("sign up success");
             } else {
               //to check user is already registered
-              alert(`Error: ${response.data.Error}`);
+              toast.error(`Error: ${response.data.Error}`);
             }
           })
           .catch((error) => {
@@ -57,10 +58,10 @@ const SignUp = () => {
       })
         .then((response) => {
           if (response.data && response.data.Status === "Success") {
-            alert("Login successful!");
+            toast.success("Login success");
             navigate("/");
           } else {
-            alert(`Error: ${response.data.Error}`);
+            toast.error(`Error: ${response.data.Error}`);
           }
         })
         .catch((error) => {

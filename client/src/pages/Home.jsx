@@ -50,14 +50,14 @@ const Home = () => {
             Welcome to Our Real Estate Website
           </h2>
           <p className="text-lg mb-4">
-            Owning a home is a keystone of wealth... both financial affluence
-            and emotional security.
+            Owning a home is a keystone of wealth both financial affluence and
+            emotional security
           </p>
           <div className="flex flex-col md:flex-row justify-center items-center">
             <div className="md:w-1/2">
               <h3 className="text-xl font-semibold mb-2">Contact Us</h3>
-              <p className="mb-2">123 Main Street, City</p>
-              <p className="mb-2">Email: info@example.com</p>
+              <p className="mb-2">XYZ Main Street, Chennai</p>
+              <p className="mb-2">Email: haven@example.com</p>
               <p>Phone: +123-456-7890</p>
             </div>
             <div className="md:w-1/2 mt-4 md:mt-0">
