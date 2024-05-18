@@ -37,6 +37,10 @@ const Header = () => {
             {" "}
             <li className="hover:underline text-slate-700">SignIn</li>
           </Link>
+          <Link to="/profile">
+            {" "}
+            <li className="hover:underline text-slate-700">profile</li>
+          </Link>
         </ul>
       </div>
     </header>

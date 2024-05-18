@@ -59,6 +59,15 @@ const SignUp = () => {
         .then((response) => {
           if (response.data && response.data.Status === "Success") {
             toast.success("Login success");
+            localStorage.setItem(
+              "UserDetails",
+              JSON.stringify({ name: response.data.name, email, password })
+            );
+
+            localStorage.setItem(
+              "Profile",
+              JSON.stringify({ token: response.data.token })
+            );
             navigate("/");
           } else {
             toast.error(`Error: ${response.data.Error}`);
