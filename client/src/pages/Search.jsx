@@ -168,7 +168,10 @@ const Search = () => {
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           {listings.map((listing) => (
-            <div key={listing.id} className="p-4 border rounded-lg shadow-lg">
+            <div
+              key={listing.id}
+              className="p-4 border rounded-lg shadow-lg hover:text-slate-900 hover:shadow-xl transition duration-300 ease-in-out border-slate-400"
+            >
               <img
                 src={`http://localhost:3001/uploads/${listing.image}`}
                 alt={listing.name}
