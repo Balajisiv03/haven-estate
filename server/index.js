@@ -1,18 +1,18 @@
 import express from "express";
 import mysql from "mysql2";
 import cors from "cors";
-import jwt from "jsonwebtoken";
 import multer from "multer";
 import path from "path";
+import jwt from "jsonwebtoken";
 
 // Configure multer for file storage
-
 const app = express();
 
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const upload = multer({
   dest: "uploads/",
@@ -22,7 +22,6 @@ const upload = multer({
     if (mimetype) {
       return cb(null, true);
     }
-    console.log(req.file, req.body, "Server");
     cb(
       "Error: File upload only supports the " +
         "following filetypes - " +
@@ -30,6 +29,7 @@ const upload = multer({
     );
   },
 });
+
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -62,7 +62,7 @@ app.post("/create-listing", upload.single("images"), async (req, res) => {
       discounted_price,
     } = req.body;
     const images = req.file.path;
-    console.log(images);
+
     const query = `
       INSERT INTO createlisting (
         name, description, address, is_sell, is_rent, is_parking, is_furnished, is_offer, num_bedrooms, num_bathrooms, regular_price, discounted_price, image
@@ -75,11 +75,11 @@ app.post("/create-listing", upload.single("images"), async (req, res) => {
         name,
         description,
         address,
-        is_sell,
-        is_rent,
-        is_parking,
-        is_furnished,
-        is_offer,
+        is_sell === "true" ? 1 : 0,
+        is_rent === "true" ? 1 : 0,
+        is_parking === "true" ? 1 : 0,
+        is_furnished === "true" ? 1 : 0,
+        is_offer === "true" ? 1 : 0,
         num_bedrooms,
         num_bathrooms,
         regular_price,
@@ -106,42 +106,64 @@ app.post("/create-listing", upload.single("images"), async (req, res) => {
   }
 });
 
-//auth
-app.post("/signup", (req, res) => {
-  const name = req.body.name;
-  const email = req.body.email;
-  const password = req.body.password;
+app.get("/listings", async (req, res) => {
+  try {
+    const {
+      search = "",
+      all = "false",
+      rent = "false",
+      sale = "false",
+      offer = "false",
+      parking = "false",
+      furnished = "false",
+      sort_order = "Price high to low",
+    } = req.query;
 
-  // Validate inputs (you can add more validation as needed)
-  if (!name || !email || !password) {
-    return res.status(400).json({ error: "Invalid input data" });
-  }
+    let query = "SELECT * FROM createlisting WHERE 1=1";
 
-  const checkemail = "SELECT * FROM user WHERE email=?";
-  db.query(checkemail, [email], (err, data) => {
-    if (err) {
-      console.error("Error checking email:", err);
-      return res.status(500).json({ error: "Internal server error" });
+    if (search) {
+      query += ` AND (name LIKE ? OR description LIKE ?)`;
     }
 
-    if (data.length > 0) {
-      return res
-        .status(400)
-        .json({ error: "User with this email already registered" });
+    if (all === "true") {
+      query += ` AND (is_sell=1 OR is_rent=1)`;
+    } else {
+      if (rent === "true") query += ` AND is_rent=1`;
+      if (sale === "true") query += ` AND is_sell=1`;
     }
 
-    const sqlinsert =
-      "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
-    db.query(sqlinsert, [name, email, password], (err, result) => {
+    if (offer === "true") query += ` AND is_offer=1`;
+    if (parking === "true") query += ` AND is_parking=1`;
+    if (furnished === "true") query += ` AND is_furnished=1`;
+
+    switch (sort_order) {
+      case "Price high to low":
+        query += " ORDER BY regular_price DESC";
+        break;
+      case "Price low to high":
+        query += " ORDER BY regular_price ASC";
+        break;
+      case "Latest":
+        query += " ORDER BY id DESC";
+        break;
+      case "Oldest":
+        query += " ORDER BY id ASC";
+        break;
+      default:
+        break;
+    }
+
+    db.query(query, [`%${search}%`, `%${search}%`], (err, results) => {
       if (err) {
-        console.error("Error inserting data:", err);
+        console.error("Error fetching listings:", err);
         return res.status(500).json({ error: "Internal server error" });
       }
-
-      console.log(result);
-      res.status(200).send("Data inserted successfully");
+      res.status(200).json(results);
     });
-  });
+  } catch (error) {
+    console.error("Error fetching listings:", error);
+    res.status(500).json({ error: "Failed to fetch listings" });
+  }
 });
 
 app.post("/login", (req, res) => {

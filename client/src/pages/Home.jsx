@@ -28,7 +28,7 @@ const Home = () => {
             </div>
             <div className="bg-white shadow-lg p-6 rounded-lg">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                Sell Your Home
+                Sell or Buy Your Home
               </h2>
               <p className="text-gray-600">
                 List your property with us and reach potential buyers.

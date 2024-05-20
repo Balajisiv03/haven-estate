@@ -5,24 +5,23 @@ const CreateListing = () => {
     name: "",
     description: "",
     address: "",
-    is_sell: 0,
-    is_rent: 0,
-    is_parking: 0,
-    is_furnished: 0,
-    is_offer: 0,
-    num_bedrooms: 1,
-    num_bathrooms: 1,
+    is_sell: false,
+    is_rent: false,
+    is_parking: false,
+    is_furnished: false,
+    is_offer: false,
+    num_bedrooms: 0,
+    num_bathrooms: 0,
     regular_price: 0,
     discounted_price: 0,
     images: [],
   });
 
   const handleChange = (e) => {
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    const { id, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [e.target.id]: value,
+      [id]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -52,8 +51,7 @@ const CreateListing = () => {
         method: "POST",
         body: data,
       });
-      console.log(response, 1);
-      if (response) {
+      if (response.ok) {
         const result = await response.json();
         console.log("Success:", result);
         alert("Listing created successfully!");
@@ -80,7 +78,7 @@ const CreateListing = () => {
             className="border border-gray-300 p-3 rounded-lg w-full mb-4"
             id="name"
             maxLength="62"
-            minLength="10"
+            minLength="5"
             required
           />
           <textarea
@@ -101,23 +99,53 @@ const CreateListing = () => {
           />
           <div className="flex gap-6 flex-wrap mb-4">
             <div className="flex items-center gap-2">
-              <input type="checkbox" id="sale" className="w-5 h-5" />
+              <input
+                type="checkbox"
+                id="is_sell"
+                checked={formData.is_sell}
+                onChange={handleChange}
+                className="w-5 h-5"
+              />
               <span className="text-sm">Sell</span>
             </div>
             <div className="flex items-center gap-2">
-              <input type="checkbox" id="rent" className="w-5 h-5" />
+              <input
+                type="checkbox"
+                id="is_rent"
+                checked={formData.is_rent}
+                onChange={handleChange}
+                className="w-5 h-5"
+              />
               <span className="text-sm">Rent</span>
             </div>
             <div className="flex items-center gap-2">
-              <input type="checkbox" id="parking" className="w-5 h-5" />
+              <input
+                type="checkbox"
+                id="is_parking"
+                checked={formData.is_parking}
+                onChange={handleChange}
+                className="w-5 h-5"
+              />
               <span className="text-sm">Parking spot</span>
             </div>
             <div className="flex items-center gap-2">
-              <input type="checkbox" id="furnished" className="w-5 h-5" />
+              <input
+                type="checkbox"
+                id="is_furnished"
+                checked={formData.is_furnished}
+                onChange={handleChange}
+                className="w-5 h-5"
+              />
               <span className="text-sm">Furnished</span>
             </div>
             <div className="flex items-center gap-2">
-              <input type="checkbox" id="offer" className="w-5 h-5" />
+              <input
+                type="checkbox"
+                id="is_offer"
+                checked={formData.is_offer}
+                onChange={handleChange}
+                className="w-5 h-5"
+              />
               <span className="text-sm">Offer</span>
             </div>
           </div>
@@ -125,7 +153,9 @@ const CreateListing = () => {
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                id="bedrooms"
+                id="num_bedrooms"
+                value={formData.num_bedrooms}
+                onChange={handleChange}
                 min="1"
                 max="10"
                 required
@@ -136,7 +166,9 @@ const CreateListing = () => {
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                id="bathrooms"
+                id="num_bathrooms"
+                value={formData.num_bathrooms}
+                onChange={handleChange}
                 min="1"
                 max="10"
                 required
@@ -147,7 +179,9 @@ const CreateListing = () => {
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                id="regularprice"
+                id="regular_price"
+                value={formData.regular_price}
+                onChange={handleChange}
                 min="1"
                 required
                 className="p-3 border border-gray-300 rounded-lg"
@@ -160,7 +194,9 @@ const CreateListing = () => {
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                id="discountedprice"
+                id="discounted_price"
+                value={formData.discounted_price}
+                onChange={handleChange}
                 min="1"
                 required
                 className="p-3 border border-gray-300 rounded-lg"
@@ -189,9 +225,6 @@ const CreateListing = () => {
               accept="image/*"
               multiple
             />
-            <button className="px-4 py-3 text-white bg-green-700 rounded-lg uppercase hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50 disabled:opacity-50">
-              Upload
-            </button>
           </div>
           <button className="py-3 w-full bg-slate-700 text-white rounded-lg uppercase hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-opacity-50 disabled:opacity-50">
             Create Listing

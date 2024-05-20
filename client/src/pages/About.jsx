@@ -26,7 +26,7 @@ const AboutPage = () => {
         helping you achieve your real estate goals and making your dream home a
         reality.
       </p>
-      <footer className="bg-gray-800 text-white py-4 text-center">
+      <footer className="bg-gray-800 text-white py-4 text-center ">
         <div className="container mx-auto">
           <h2 className="text-xl font-semibold mb-2">Contact Us</h2>
           <p className="mb-2">123 Main Street, City</p>
